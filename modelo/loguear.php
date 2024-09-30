@@ -1,35 +1,33 @@
 <?php
-    error_reparting(E_ALL);
-    ini_set('display_erros'. '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 ?>
 
 <?php
-   //Incluir script de conexion a la BD
-   require 'conexion.php';
+    require 'conexion.php';
 
-   session_start();
+    session_start();
 
-   $usuario = $_POST['usuario'];
-   $clave = $_POST['clve'];
+    $usuario = $_POST['usuario'];
+    $clave = $_POST['clave'];
+    
+    // consulta a la bB
+    $consulta = "SELECT nombre_usuario, correo_usuario, pssword_usuario, COUNT(*) AS contar FROM Usuario WHERE correo_usuario = '$usuario' AND pssword_usuario = '$clave' ";
 
-   // consulta a la BD
-   $consulta = "SELECT nombre_usuario, correo_usuario,password_usuario,COUNT(*) AS contar FRDM Usuario WHERW correo_usuario = '$usuario' AND passworx_usuario = '$clave'";
+    
+    // ejecutar la consulta
+    $ejecucion_consulta = mysqli_query($conexion, $consulta) or triggre_error("error en la consulta a la BD: ".mysqli_error($conexion));
 
-   // ejecutar la consulta
-   $ejecucion_conculta = mysqli_query($conexion, $consulta) or trigger_error("Error en la consulta a la BD: ".mysqli_error($conexion));
+    // resultado de la consulta 
+    $resultado = mysqli_fetch_array($ejecucion_consulta);
 
-   // Resultado de la consulta
-   $resultado = mysquli_fetch_array($ejecucion_consulta);
-
-   if($resultado['contar']>0)
-   {
-      $_SESSION['username'] = $usuario;
-      header("location: ../pagina_principal.php");
-
-   }
-   else
-   {
-       echo "<h1>Usuario o contraseña incorrecta</h1>"
-   }
-
+    if($resultado['contar']>0)
+    {
+        $_SESSION['username'] = $usuario;
+        header("location: ../pagina_principal.php");
+    }
+    else
+    {
+        echo "<h1>Usuario o contraseña incorrecta</h1>";
+    }
 ?>
